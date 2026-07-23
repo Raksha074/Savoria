@@ -1,0 +1,41 @@
+import "dotenv/config";
+import express, { Request, Response } from 'express';
+import cors from "cors";
+import connectDB from "./config/db.js";
+
+
+
+const app = express();
+
+// connect to MongoDB
+await connectDB()
+
+
+
+const port = process.env.PORT || 5000;
+
+// Connect to MongoDB and start the server
+try {
+    await connectDB();
+    app.use(cors());
+    app.use(express.json());
+
+    app.get('/', (req: Request, res: Response) => {
+        res.send('Server is Live!');
+    });
+
+    app.listen(port, () => {
+        console.log(`Server is running at http://localhost:${port}`);
+    });
+} catch (error) {
+    console.error('Server startup aborted because MongoDB connection failed.');
+    process.exit(1);
+}
+
+app.get('/', (req: Request, res: Response) => {
+    res.send('Server is Live!');
+});
+
+app.listen(port, () => {
+    console.log(`Server is running at http://localhost:${port}`);
+});
