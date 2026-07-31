@@ -24,7 +24,7 @@ export const createBooking = async (req: AuthRequest, res: Response): Promise<vo
         }
 
         //Verify restaurant is approved
-        if (restaurant.Status !== "approved") {
+        if (restaurant.status !== "approved") {
             res.status(400).json({ message: "Reservation are not open for this restaurant yet" });
             return;
         }
@@ -46,8 +46,9 @@ export const createBooking = async (req: AuthRequest, res: Response): Promise<vo
 
         if (requestedGuests > availableSeats) {
             res.status(400).json({
-                message: `Unable to rresreve . Only ${availableSeats} seats are availabe for this time slot.`,
-            })
+                message: `Unable to reserve. Only ${availableSeats} seats are available for this time slot.`,
+            });
+            return;
         }
 
         const booking = await Booking.create({

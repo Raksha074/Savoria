@@ -17,7 +17,7 @@ export interface IRestaurant extends Document {
     featured: boolean;
     exclusive: boolean;
     owner: Types.ObjectId;
-    Status: "pending" | "approved" | "rejected";
+    status: "pending" | "approved" | "rejected";
     totalSeats: number;
     createdAt: Date;
     updatedAt: Date;
@@ -43,7 +43,7 @@ const RestaurantSchema = new Schema<IRestaurant>(
         featured: { type: Boolean, default: false },
         exclusive: { type: Boolean, default: false },
         owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
-        Status: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" },
+        status: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" },
         totalSeats: { type: Number, default: 20 },
 
     },

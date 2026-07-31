@@ -68,21 +68,19 @@ export default function AuthModal() {
                 <div className="flex border-b border-outline-variant/20">
                     <button
                         onClick={() => setIsLoginTab(true)}
-                        className={`flex-1 py-5 text-center text-xs font-medium tracking-widest transition-soft cursor-pointer ${
-                            isLoginTab
+                        className={`flex-1 py-5 text-center text-xs font-medium tracking-widest transition-soft cursor-pointer ${isLoginTab
                                 ? "text-primary border-b-2 border-primary bg-surface-container-lowest"
                                 : "text-black/55 hover:text-primary bg-surface-container-low/50"
-                        }`}
+                            }`}
                     >
                         SIGN IN
                     </button>
                     <button
                         onClick={() => setIsLoginTab(false)}
-                        className={`flex-1 py-5 text-center text-xs font-medium tracking-widest transition-soft cursor-pointer ${
-                            !isLoginTab
+                        className={`flex-1 py-5 text-center text-xs font-medium tracking-widest transition-soft cursor-pointer ${!isLoginTab
                                 ? "text-primary border-b-2 border-primary bg-surface-container-lowest"
                                 : "text-black/55 hover:text-primary bg-surface-container-low/50"
-                        }`}
+                            }`}
                     >
                         SIGN UP
                     </button>
@@ -92,7 +90,7 @@ export default function AuthModal() {
                 <form onSubmit={handleSubmit} className="p-8 space-y-6 flex-1 flex flex-col justify-between">
                     <div>
                         <div className="text-center mb-8">
-                            <h2 className="font-display text-2xl font-medium text-primary tracking-tight">Welcome to QuickDine</h2>
+                            <h2 className="font-display text-2xl font-medium text-primary tracking-tight">Welcome to Savoria</h2>
                             <p className="text-xs text-black/55 mt-2 leading-relaxed">
                                 Access your exclusive reservations and curated dining profile.
                             </p>

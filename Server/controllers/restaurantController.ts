@@ -64,7 +64,7 @@ export const getFeaturedRestaurants = async (req: Request, res: Response): Promi
     try {
         const featured = await Restaurant.find({
             status: 'approved',
-            $or: [{ isFeatured: true }, { isExclusive: true }]
+            $or: [{ featured: true }, { exclusive: true }]
         }).limit(6)
         res.json(featured);
     } catch (error) {

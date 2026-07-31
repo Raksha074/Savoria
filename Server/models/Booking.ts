@@ -33,7 +33,7 @@ const BookingSchema = new Schema<IBooking>(
 
 )
 
-BookingSchema.pre("save", function () {
+BookingSchema.pre("validate", function () {
     if (!this.bookingId) {
         this.bookingId = `GR-${crypto.randomBytes(4).toString("hex").toUpperCase()}`;
     }

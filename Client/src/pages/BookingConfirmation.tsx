@@ -10,7 +10,8 @@ import Loader from "../components/Loader.tsx";
 import BookingSuccess from "../components/booking/BookingSuccess.tsx";
 import BookingSummary from "../components/booking/BookingSummary.tsx";
 import BookingForm from "../components/booking/BookingForm.tsx";
-import { dummyBookingData, dummyRestaurant } from "../assets/assets.ts";
+import RestaurantCard from "../components/RestaurantCard.tsx";
+import api from "../lib/api.ts";
 
 export default function BookingConfirmation() {
     const { slug } = useParams<{ slug: string }>();
@@ -22,6 +23,7 @@ export default function BookingConfirmation() {
     const [loading, setLoading] = useState(true);
     const [confirming, setConfirming] = useState(false);
     const [confirmedBooking, setConfirmedBooking] = useState<any>(null);
+    const [recommendations, setRecommendations] = useState<any[]>([]);
 
     // Form inputs
     const [name, setName] = useState(user?.name || "");
@@ -48,14 +50,35 @@ export default function BookingConfirmation() {
 
     useEffect(() => {
         const fetchRestaurant = async () => {
-            setRestaurant(dummyRestaurant.find((r) => r.slug === slug));
-            setLoading(false);
+            try {
+                setLoading(true);
+                const res = await api.get(`/restaurants/${slug}`)
+                setRestaurant(res.data)
+            } catch (error: any) {
+                toast.error(error?.response?.data?.message || error?.message);
+                navigate("/");
+
+            } finally {
+                setLoading(false);
+            }
         };
 
         if (slug) {
             fetchRestaurant();
         }
     }, [slug, navigate]);
+
+    useEffect(() => {
+        const fetchRecommendations = async () => {
+            try {
+                const res = await api.get('/restaurants/featured');
+                setRecommendations(res.data);
+            } catch (error: any) {
+                console.error(error);
+            }
+        };
+        fetchRecommendations();
+    }, []);
 
     if (loading) {
         return <Loader text="Retrieving Dining Details..." />;
@@ -73,7 +96,10 @@ export default function BookingConfirmation() {
 
         try {
             setConfirming(true);
-            setConfirmedBooking(dummyBookingData);
+
+            const res = await api.post(`/bookings`, { restaurantId: restaurant._id, date, time: slot, guests, occasion, specialRequests })
+            setConfirmedBooking(res.data)
+
             toast.success("Reservation confirmed!");
         } catch (error: any) {
             toast.error(error?.response?.data?.message || error?.message);
@@ -87,8 +113,19 @@ export default function BookingConfirmation() {
         return (
             <div className="min-h-screen bg-surface flex flex-col pt-20">
                 <Navbar />
-                <main className="grow flex items-center justify-center py-12 px-6">
+                <main className="grow flex flex-col items-center justify-center py-12 px-6 space-y-16">
                     <BookingSuccess confirmedBooking={confirmedBooking} restaurant={restaurant} date={date} slot={slot} guests={guests} />
+                    
+                    {recommendations.length > 0 && (
+                        <div className="w-full max-w-7xl mx-auto space-y-4 pt-10 border-t border-outline-variant/10 text-left">
+                            <h3 className="font-display text-lg font-medium text-primary">Recommended specifically for you</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {recommendations.slice(0, 3).filter(r => r).map((r) => (
+                                    <RestaurantCard key={r?._id} restaurant={r} />
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </main>
                 <Footer />
             </div>
@@ -134,6 +171,18 @@ export default function BookingConfirmation() {
                         />
                     </div>
                 </div>
+
+                {/* Recommendations Section */}
+                {recommendations.length > 0 && (
+                    <div className="space-y-4 pt-16 mt-16 border-t border-outline-variant/10 text-left">
+                        <h3 className="font-display text-lg font-medium text-primary">Discover More Experiences</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {recommendations.slice(0, 3).filter(r => r).map((r) => (
+                                <RestaurantCard key={r?._id} restaurant={r} />
+                            ))}
+                        </div>
+                    </div>
+                )}
             </main>
 
             <Footer />

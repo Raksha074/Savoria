@@ -63,7 +63,7 @@ export default function BookingWidget({
                             type="date"
                             value={selectedDate}
                             onChange={(e) => setSelectedDate(e.target.value)}
-                            min={new Date().toISOString().split("T")[0]}
+                            min={new Date().toLocaleDateString("en-CA")}
                             className="w-full bg-surface-container-low/30 pl-9 pr-3 py-2.5 text-xs border border-outline-variant/40 focus:border-secondary focus:outline-none rounded-md cursor-pointer"
                         />
                     </div>
@@ -79,16 +79,18 @@ export default function BookingWidget({
                             </div>
                         ) : (
                             (() => {
-                                const todayStr = new Date().toISOString().split("T")[0];
+                                // Use strictly local time scale to generate YYYY-MM-DD so users don't accidentally book 'yesterday' right after midnight
+    const now = new Date();
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
                                 const isToday = selectedDate === todayStr;
                                 const allSlots =
                                     slotsAvailability.length > 0
                                         ? slotsAvailability
                                         : (restaurant.availableSlots || []).map((s: string) => ({
-                                              time: s,
-                                              availableSeats: 20,
-                                              isAvailable: true,
-                                          }));
+                                            time: s,
+                                            availableSeats: 20,
+                                            isAvailable: true,
+                                        }));
                                 return allSlots.filter((slotInfo: any) => {
                                     if (!isToday) return true;
                                     const [slotHour, slotMinute] = slotInfo.time.split(":").map(Number);
@@ -107,13 +109,12 @@ export default function BookingWidget({
                                         type="button"
                                         disabled={isFull}
                                         onClick={() => setSelectedSlot(slot)}
-                                        className={`py-2 px-1 text-center text-[10px] font-medium tracking-wider uppercase border transition-all rounded-sm ${
-                                            isSelected
+                                        className={`py-2 px-1 text-center text-[10px] font-medium tracking-wider uppercase border transition-all rounded-sm ${isSelected
                                                 ? "bg-secondary border-secondary text-white shadow-sm cursor-pointer"
                                                 : isFull
-                                                  ? "bg-black/5 border-outline-variant/10 text-black/25 cursor-not-allowed opacity-50"
-                                                  : "border-outline-variant/40 text-black/55 hover:border-primary hover:text-primary cursor-pointer"
-                                        }`}
+                                                    ? "bg-black/5 border-outline-variant/10 text-black/25 cursor-not-allowed opacity-50"
+                                                    : "border-outline-variant/40 text-black/55 hover:border-primary hover:text-primary cursor-pointer"
+                                            }`}
                                     >
                                         {slot}
                                         {isFull && <span className="block text-[8px] text-error uppercase mt-0.5">Full</span>}
