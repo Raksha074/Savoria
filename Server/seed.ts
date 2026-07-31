@@ -1,8 +1,6 @@
 import dns from 'node:dns';
 dns.setDefaultResultOrder('ipv4first'); // Forces IPv4 priority
 dns.setServers(['8.8.8.8', '1.1.1.1'])
-
-
 import "dotenv/config";
 import mongoose from "mongoose";
 import bcrypt from 'bcrypt';

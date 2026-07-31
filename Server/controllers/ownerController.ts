@@ -12,10 +12,10 @@ const uploadToCloudinary = (fileBuffer: Buffer): Promise<{ secure_url: string }>
             if (error) {
                 console.error("Cloudinary upload failed (likely invalid credentials):", error);
                 // Graceful fallback dummy image instead of completely failing the registration
-                return resolve({ secure_url: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1200" });
+                return resolve({ secure_url: `data:image/jpeg;base64,${fileBuffer.toString('base64')}` });
             }
             if (!result) {
-                return resolve({ secure_url: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1200" });
+                return resolve({ secure_url: `data:image/jpeg;base64,${fileBuffer.toString('base64')}` });
             }
             resolve({ secure_url: result.secure_url })
         })
