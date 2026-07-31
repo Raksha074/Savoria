@@ -33,7 +33,7 @@ Ensure you have **Node.js** (v18 or higher) and **npm** installed.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/quickdine-frontend.git
+   git clone https://github.com/Raksha074/Savoria.git
    cd quickdine-frontend
    ```
 
@@ -45,7 +45,7 @@ Ensure you have **Node.js** (v18 or higher) and **npm** installed.
 3. Set up environment variables:
    Create a `.env` file in the root directory:
    ```env
-   VITE_API_URL=http://localhost:5000/api
+   VITE_API_URL=https://savoria-server.onrender.com
    ```
 
 ### Development Server
